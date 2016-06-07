@@ -23,4 +23,5 @@ public class FridayLunchTest {
         fridayLunch.assignApprentice(nick);
         assertEquals(nick, fridayLunch.getApprentice().get());
     }
+
 }
