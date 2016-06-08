@@ -1,16 +1,15 @@
 package LunchManCore;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertEquals;
+
 
 public class RotaTest {
 
@@ -18,12 +17,12 @@ public class RotaTest {
 
     @Before
     public void setUp() {
-        this.rota = new Rota(4);
+        this.rota = new Rota(4, LocalDate.of(2016, 6, 11));
     }
 
     @Test
     public void canAssignOneApprenticeToAFridayLunch() {
-        FridayLunch nextFriday = new FridayLunch(new Date(Timestamp.valueOf("2016-06-10 07:00:00").getTime()));
+        FridayLunch nextFriday = new FridayLunch(LocalDate.of(2016, 6, 10));
         Apprentice ced = new Apprentice("Cedric");
         rota.assign(nextFriday, ced);
         assertEquals(ced, rota.getSchedule().get(0).getApprentice().get());
@@ -32,37 +31,36 @@ public class RotaTest {
 
     @Test
     public void findsDateOfNextFridayWhenScheduleIsEmpty() {
-        Date date = new Date(Timestamp.valueOf("2016-06-17 07:00:00").getTime());
-        assertEquals(date, rota.findNextFriday(new Date(Timestamp.valueOf("2016-06-11 07:00:00").getTime())));
+        assertEquals(LocalDate.of(2016, 6, 17), rota.findNextFriday(LocalDate.of(2016, 6, 11)));
     }
 
     @Test
     public void findsTheNextFourFridaysWhenScheduleIsEmpty() {
-        List<Date> result = rota.findNextFridays(new Date(Timestamp.valueOf("2016-06-11 07:00:00").getTime()));
-        assertEquals(new Date(Timestamp.valueOf("2016-06-17 07:00:00").getTime()), result.get(0));
-        assertEquals(new Date(Timestamp.valueOf("2016-06-24 07:00:00").getTime()), result.get(1));
-        assertEquals(new Date(Timestamp.valueOf("2016-07-01 07:00:00").getTime()), result.get(2));
-        assertEquals(new Date(Timestamp.valueOf("2016-07-08 07:00:00").getTime()), result.get(3));
+        List<LocalDate> result = rota.findNextFridays(LocalDate.of(2016, 6, 11));
+        assertEquals(LocalDate.of(2016, 6, 17), result.get(0));
+        assertEquals(LocalDate.of(2016, 6, 24), result.get(1));
+        assertEquals(LocalDate.of(2016, 7, 1), result.get(2));
+        assertEquals(LocalDate.of(2016, 7, 8), result.get(3));
     }
 
     @Test
     public void createsTheNextFourFridayLunchesWhenScheduleIsEmpty() {
-        List<FridayLunch> result = rota.createFridays(new Date(Timestamp.valueOf("2016-06-11 07:00:00").getTime()));
-        assertEquals(new Date(Timestamp.valueOf("2016-06-17 07:00:00").getTime()), result.get(0).getDate());
-        assertEquals(new Date(Timestamp.valueOf("2016-06-24 07:00:00").getTime()), result.get(1).getDate());
-        assertEquals(new Date(Timestamp.valueOf("2016-07-01 07:00:00").getTime()), result.get(2).getDate());
-        assertEquals(new Date(Timestamp.valueOf("2016-07-08 07:00:00").getTime()), result.get(3).getDate());
+        List<FridayLunch> result = rota.createFridays();
+        assertEquals(LocalDate.of(2016, 6, 17), result.get(0).getDate());
+        assertEquals(LocalDate.of(2016, 6, 24), result.get(1).getDate());
+        assertEquals(LocalDate.of(2016, 7, 1), result.get(2).getDate());
+        assertEquals(LocalDate.of(2016, 7, 8), result.get(3).getDate());
     }
 
     @Test
     public void createsTheNext3FridayLunchesWhenScheduleHasOneFriday() {
-        FridayLunch nextFriday = new FridayLunch(new Date(Timestamp.valueOf("2016-06-17 07:00:00").getTime()));
+        FridayLunch nextFriday = new FridayLunch(LocalDate.of(2016, 6, 17));
         Apprentice ced = new Apprentice("Cedric");
         rota.assign(nextFriday, ced);
-        List<FridayLunch> result = rota.createFridays(new Date(Timestamp.valueOf("2016-06-15 07:00:00").getTime()));
-        assertEquals(new Date(Timestamp.valueOf("2016-06-24 07:00:00").getTime()), result.get(0).getDate());
-        assertEquals(new Date(Timestamp.valueOf("2016-07-01 07:00:00").getTime()), result.get(1).getDate());
-        assertEquals(new Date(Timestamp.valueOf("2016-07-08 07:00:00").getTime()), result.get(2).getDate());
+        List<FridayLunch> result = rota.createFridays();
+        assertEquals(LocalDate.of(2016, 6, 24), result.get(0).getDate());
+        assertEquals(LocalDate.of(2016, 7, 1), result.get(1).getDate());
+        assertEquals(LocalDate.of(2016, 7, 8), result.get(2).getDate());
         assertEquals(3, result.size());
     }
 
@@ -70,7 +68,7 @@ public class RotaTest {
     public void canAssignOneApprenticeToFourFridayLunches() {
         Apprentice priya = new Apprentice("Priya");
         List<Apprentice> apprentices = new LinkedList<>(Arrays.asList(priya));
-        rota.updateSchedule(apprentices, new Date(Timestamp.valueOf("2016-06-17 07:00:00").getTime()));
+        rota.updateSchedule(apprentices);
         List<FridayLunch> result = rota.getSchedule();
         assertEquals(priya, result.get(0).getApprentice().get());
         assertEquals(priya, result.get(1).getApprentice().get());
@@ -85,7 +83,7 @@ public class RotaTest {
         Apprentice nick = new Apprentice("Nick");
         Apprentice mollie = new Apprentice("Mollie");
         List<Apprentice> apprentices = new LinkedList<>(Arrays.asList(priya, ced, nick, mollie));
-        rota.updateSchedule(apprentices, new Date(Timestamp.valueOf("2016-06-17 07:00:00").getTime()));
+        rota.updateSchedule(apprentices);
         List<FridayLunch> result = rota.getSchedule();
         assertEquals(priya, result.get(0).getApprentice().get());
         assertEquals(ced, result.get(1).getApprentice().get());
@@ -98,19 +96,19 @@ public class RotaTest {
         Apprentice nick = new Apprentice("Nick");
         Apprentice mollie = new Apprentice("Mollie");
         List<Apprentice> apprentices = new LinkedList<>(Arrays.asList(nick, mollie));
-        FridayLunch nextFriday = new FridayLunch(new Date(Timestamp.valueOf("2016-06-17 07:00:00").getTime()));
+        FridayLunch nextFriday = new FridayLunch(LocalDate.of(2016, 6, 17));
         Apprentice ced = new Apprentice("Cedric");
         rota.assign(nextFriday, ced);
-        rota.updateSchedule(apprentices, new Date(Timestamp.valueOf("2016-06-17 07:00:00").getTime()));
+        rota.updateSchedule(apprentices);
         List<FridayLunch> result = rota.getSchedule();
         assertEquals(ced, result.get(0).getApprentice().get());
-        assertEquals(new Date(Timestamp.valueOf("2016-06-17 07:00:00").getTime()), result.get(0).getDate());
+        assertEquals(LocalDate.of(2016, 6, 17), result.get(0).getDate());
         assertEquals(nick, result.get(1).getApprentice().get());
-        assertEquals(new Date(Timestamp.valueOf("2016-06-24 07:00:00").getTime()), result.get(1).getDate());
+        assertEquals(LocalDate.of(2016, 6, 24), result.get(1).getDate());
         assertEquals(mollie, result.get(2).getApprentice().get());
-        assertEquals(new Date(Timestamp.valueOf("2016-07-01 07:00:00").getTime()), result.get(2).getDate());
+        assertEquals(LocalDate.of(2016, 7, 1), result.get(2).getDate());
         assertEquals(nick, result.get(3).getApprentice().get());
-        assertEquals(new Date(Timestamp.valueOf("2016-07-08 07:00:00").getTime()), result.get(3).getDate());
+        assertEquals(LocalDate.of(2016, 7, 8), result.get(3).getDate());
     }
 
 }

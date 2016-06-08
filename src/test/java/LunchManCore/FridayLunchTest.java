@@ -2,9 +2,7 @@ package LunchManCore;
 
 import org.junit.Test;
 
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.Optional;
+import java.time.LocalDate;
 
 import static org.junit.Assert.assertEquals;
 
@@ -12,13 +10,13 @@ public class FridayLunchTest {
 
     @Test
     public void hasADate() {
-        FridayLunch fridayLunch = new FridayLunch(new Date(Timestamp.valueOf("2016-06-10 07:00:00").getTime()));
-        assertEquals(new Date(Timestamp.valueOf("2016-06-10 07:00:00").getTime()), fridayLunch.getDate());
+        FridayLunch fridayLunch = new FridayLunch(LocalDate.of(2016, 6, 10));
+        assertEquals(LocalDate.of(2016, 6, 10), fridayLunch.getDate());
     }
 
     @Test
     public void hasAnApprentice() {
-        FridayLunch fridayLunch = new FridayLunch(new Date(Timestamp.valueOf("2016-06-10 07:00:00").getTime()));
+        FridayLunch fridayLunch = new FridayLunch(LocalDate.of(2016, 6, 10));
         Apprentice nick = new Apprentice("Nick");
         fridayLunch.assignApprentice(nick);
         assertEquals(nick, fridayLunch.getApprentice().get());

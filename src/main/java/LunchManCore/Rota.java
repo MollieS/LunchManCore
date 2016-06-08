@@ -1,17 +1,21 @@
 package LunchManCore;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
-import static java.util.Calendar.DAY_OF_WEEK;
-import static java.util.Calendar.FRIDAY;
 
 public class Rota {
 
     private final int scheduleCapacity;
+    private LocalDate startDate;
     private List<FridayLunch> schedule = new ArrayList<>();
 
-    public Rota(int scheduleCapacity) {
+    public Rota(int scheduleCapacity, LocalDate startDate) {
         this.scheduleCapacity = scheduleCapacity;
+        this.startDate = startDate;
     }
 
     public List<FridayLunch> getSchedule() {
@@ -23,75 +27,36 @@ public class Rota {
         schedule.add(nextFriday);
     }
 
-    public void updateSchedule(List<Apprentice> apprentices, Date dateymcdateface) {
-        for (FridayLunch friday : createFridays(dateymcdateface)) {
+    public void updateSchedule(List<Apprentice> apprentices) {
+        for (FridayLunch friday : createFridays()) {
             Apprentice apprentice = apprentices.remove(0);
             assign(friday, apprentice);
             apprentices.add(apprentice);
         }
     }
 
-    public Date findNextFriday(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        int diff = Calendar.FRIDAY - calendar.get(DAY_OF_WEEK);
-        if (!(diff > 0)) {
-            diff += 7;
-        }
-        calendar.add(Calendar.DAY_OF_MONTH, diff);
-        return calendar.getTime();
+    public LocalDate findNextFriday(LocalDate date) {
+        return date.with(TemporalAdjusters.next(DayOfWeek.FRIDAY));
     }
 
-    public List<Date> findNextFridays(Date date) {
-        List<Date> dates = new ArrayList<>();
+    public List<LocalDate> findNextFridays(LocalDate date) {
+        List<LocalDate> dates = new ArrayList<>();
         for (int i = getSchedule().size(); i < scheduleCapacity; i++) {
             dates.add(findNextFriday(date));
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            calendar.add(Calendar.DAY_OF_MONTH, 7);
-            date = calendar.getTime();
+            date = date.plus(1, ChronoUnit.WEEKS);
         }
         return dates;
     }
 
-    public List<FridayLunch> createFridays(Date startDate) {
+    public List<FridayLunch> createFridays() {
         List<FridayLunch> lunches = new ArrayList<>();
+
         if (!(schedule.isEmpty())) {
-            startDate = schedule.get(schedule.size() -1).getDate();
+            startDate = schedule.get(schedule.size() - 1).getDate();
         }
-        for (Date date : findNextFridays(startDate)) {
+        for (LocalDate date : findNextFridays(startDate)) {
             lunches.add(new FridayLunch(date));
         }
         return lunches;
     }
-//
-//    private List<FridayLunch> createFridays(int scheduleSize) {
-//        List<FridayLunch> tmpList = new ArrayList<>();
-//        for (int i = scheduleSize; i < scheduleCapacity; i++) {
-//            tmpList.add(new FridayLunch(findNextFriday()));
-//            schedule.add(new FridayLunch(findNextFriday()))
-//        }
-//        return tmpList;
-//    }
-//
-//    private Date findNextFriday() {
-//        Date lastFriday;
-//        if (schedule.size() > 0) {
-//            lastFriday = schedule.get(schedule.size() - 1).getDate();
-//        } else {
-//            Calendar calendar = Calendar.getInstance();
-//            calendar.setTime(startFromDate);
-//            if (calendar.get(DAY_OF_WEEK) == Calendar.FRIDAY) {
-//                lastFriday = calendar.getTime();
-//            } else {
-//                calendar.set(DAY_OF_WEEK, Calendar.FRIDAY);
-//                calendar.add(Calendar.DAY_OF_MONTH, -7);
-//                lastFriday = calendar.getTime();
-//            }
-//        }
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTime(lastFriday);
-//        calendar.add(Calendar.DAY_OF_MONTH, 7);
-//        return calendar.getTime();
-//    }
 }
