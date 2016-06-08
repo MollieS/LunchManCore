@@ -25,7 +25,9 @@ public class Rota {
 
     public void updateSchedule(List<Apprentice> apprentices, Date dateymcdateface) {
         for (FridayLunch friday : createFridays(dateymcdateface)) {
-            assign(friday, apprentices.get(0));
+            Apprentice apprentice = apprentices.remove(0);
+            assign(friday, apprentice);
+            apprentices.add(apprentice);
         }
     }
 
