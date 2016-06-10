@@ -24,7 +24,13 @@ public class Rota {
 
     public void assign(FridayLunch nextFriday, Apprentice apprentice) {
         nextFriday.assignApprentice(apprentice);
-        schedule.add(nextFriday);
+        if (schedule.size() < scheduleCapacity) {
+            schedule.add(nextFriday);
+        }
+    }
+
+    public void clear() {
+        schedule = new ArrayList<>();
     }
 
     public void updateSchedule(List<Apprentice> apprentices) {
@@ -58,5 +64,9 @@ public class Rota {
             lunches.add(new FridayLunch(date));
         }
         return lunches;
+    }
+
+    public void setSchedule(List<FridayLunch> schedule) {
+        this.schedule = schedule;
     }
 }

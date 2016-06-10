@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,6 +51,17 @@ public class RotaTest {
         assertEquals(LocalDate.of(2016, 6, 24), result.get(1).getDate());
         assertEquals(LocalDate.of(2016, 7, 1), result.get(2).getDate());
         assertEquals(LocalDate.of(2016, 7, 8), result.get(3).getDate());
+    }
+
+    @Test
+    public void canSetTheSchedule() {
+        FridayLunch fridayLunch1 = new FridayLunch(LocalDate.of(2016, 6, 17));
+        FridayLunch fridayLunch2 = new FridayLunch(LocalDate.of(2016, 6, 24));
+        FridayLunch fridayLunch3 = new FridayLunch(LocalDate.of(2016, 7, 1));
+        FridayLunch fridayLunch4 = new FridayLunch(LocalDate.of(2016, 7, 8));
+        List<FridayLunch> lunches = Arrays.asList(fridayLunch1, fridayLunch2, fridayLunch3, fridayLunch4);
+        rota.setSchedule(lunches);
+        assertEquals(lunches, rota.getSchedule());
     }
 
     @Test

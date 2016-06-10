@@ -1,2 +1,2 @@
 #!/bin/bash
-cp ./build/libs/LunchManCore.jar ../LunchMan/libs/
+cp ./build/libs/LunchManCore.jar ../LunchMan/lib/
