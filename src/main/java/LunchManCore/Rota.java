@@ -22,23 +22,24 @@ public class Rota {
         return schedule;
     }
 
-    public void setSchedule(List<FridayLunch> schedule) {
-        this.schedule = schedule;
+    public void updateSchedule(List<FridayLunch> loadedSchedule, List<Apprentice> apprentices) {
+        setSchedule(loadedSchedule);
+        for (FridayLunch friday : createFridays()) {
+            Apprentice apprentice = apprentices.remove(0);
+            addToSchedule(friday, apprentice);
+            apprentices.add(apprentice);
+        }
     }
 
-    public void assign(FridayLunch nextFriday, Apprentice apprentice) {
+    private void addToSchedule(FridayLunch nextFriday, Apprentice apprentice) {
         nextFriday.assignApprentice(apprentice);
         if (schedule.size() < scheduleCapacity) {
             schedule.add(nextFriday);
         }
     }
 
-    public void updateSchedule(List<Apprentice> apprentices) {
-        for (FridayLunch friday : createFridays()) {
-            Apprentice apprentice = apprentices.remove(0);
-            assign(friday, apprentice);
-            apprentices.add(apprentice);
-        }
+    private void setSchedule(List<FridayLunch> schedule) {
+        this.schedule = schedule;
     }
 
     private LocalDate findNextFriday(LocalDate date) {
@@ -79,7 +80,7 @@ public class Rota {
         }
     }
 
-    public void emptySchedule() {
+    protected void emptySchedule() {
         schedule = new ArrayList<>();
     }
 }

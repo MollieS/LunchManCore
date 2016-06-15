@@ -25,7 +25,7 @@ public class RotaTest {
     public void emptyScheduleAddsFourCorrectDates() {
         rota.emptySchedule();
 
-        rota.updateSchedule(apprentices);
+        rota.updateSchedule(new ArrayList<>(), apprentices);
 
         assertEquals(LocalDate.of(2016, 6, 17), rota.getSchedule().get(0).getDate());
         assertEquals(LocalDate.of(2016, 6, 24), rota.getSchedule().get(1).getDate());
@@ -35,9 +35,9 @@ public class RotaTest {
 
     @Test
     public void fullInDateScheduleDoesNotChangeDate() {
-        rota.setSchedule(createSchedule("2016-06-17", "2016-06-24", "2016-07-01", "2016-07-08"));
+        List<FridayLunch> createdSchedule = createSchedule("2016-06-17", "2016-06-24", "2016-07-01", "2016-07-08");
 
-        rota.updateSchedule(apprentices);
+        rota.updateSchedule(createdSchedule, apprentices);
 
         assertEquals(LocalDate.of(2016, 6, 17), rota.getSchedule().get(0).getDate());
         assertEquals(LocalDate.of(2016, 6, 24), rota.getSchedule().get(1).getDate());
@@ -47,9 +47,9 @@ public class RotaTest {
 
     @Test
     public void outOfDateScheduleHasDateUpdated() {
-        rota.setSchedule(createSchedule("2016-06-10", "2016-06-17", "2016-06-24", "2016-07-01"));
+        List<FridayLunch> createdSchedule = createSchedule("2016-06-10", "2016-06-17", "2016-06-24", "2016-07-01");
 
-        rota.updateSchedule(apprentices);
+        rota.updateSchedule(createdSchedule, apprentices);
 
         assertEquals(LocalDate.of(2016, 6, 17), rota.getSchedule().get(0).getDate());
         assertEquals(LocalDate.of(2016, 6, 24), rota.getSchedule().get(1).getDate());
@@ -59,9 +59,9 @@ public class RotaTest {
 
     @Test
     public void scheduleWithTwoOldDatesHasTwoDatesUpdates() {
-        rota.setSchedule(createSchedule("2016-06-03", "2016-06-10", "2016-06-17", "2016-06-24"));
+        List<FridayLunch> createdSchedule = createSchedule("2016-06-03", "2016-06-10", "2016-06-17", "2016-06-24");
 
-        rota.updateSchedule(apprentices);
+        rota.updateSchedule(createdSchedule, apprentices);
 
         assertEquals(LocalDate.of(2016, 6, 17), rota.getSchedule().get(0).getDate());
         assertEquals(LocalDate.of(2016, 6, 24), rota.getSchedule().get(1).getDate());
@@ -71,9 +71,9 @@ public class RotaTest {
 
     @Test
     public void scheduleWithFourOldDatesHasFourDatesUpdates() {
-        rota.setSchedule(createSchedule("2016-05-20", "2016-05-27", "2016-06-03", "2016-06-10"));
+        List<FridayLunch> createdSchedule = createSchedule("2016-05-20", "2016-05-27", "2016-06-03", "2016-06-10");
 
-        rota.updateSchedule(apprentices);
+        rota.updateSchedule(createdSchedule, apprentices);
 
         assertEquals(LocalDate.of(2016, 6, 17), rota.getSchedule().get(0).getDate());
         assertEquals(LocalDate.of(2016, 6, 24), rota.getSchedule().get(1).getDate());
@@ -87,7 +87,7 @@ public class RotaTest {
         List<Apprentice> apprentices = createApprentices("Mollie");
         rota.emptySchedule();
 
-        rota.updateSchedule(apprentices);
+        rota.updateSchedule(new ArrayList<>(), apprentices);
 
         assertEquals("Mollie", rota.getSchedule().get(0).getApprentice().get().getName());
         assertEquals("Mollie", rota.getSchedule().get(1).getApprentice().get().getName());
@@ -100,7 +100,7 @@ public class RotaTest {
         List<Apprentice> apprentices = createApprentices("Mollie", "Nick");
         rota.emptySchedule();
 
-        rota.updateSchedule(apprentices);
+        rota.updateSchedule(new ArrayList<>(), apprentices);
 
         assertEquals("Mollie", rota.getSchedule().get(0).getApprentice().get().getName());
         assertEquals("Nick", rota.getSchedule().get(1).getApprentice().get().getName());
@@ -113,7 +113,7 @@ public class RotaTest {
         List<Apprentice> apprentices = createApprentices("Mollie", "Nick", "Priya", "Rabea");
         rota.emptySchedule();
 
-        rota.updateSchedule(apprentices);
+        rota.updateSchedule(new ArrayList<>(), apprentices);
 
         assertEquals("Mollie", rota.getSchedule().get(0).getApprentice().get().getName());
         assertEquals("Nick", rota.getSchedule().get(1).getApprentice().get().getName());
@@ -123,11 +123,11 @@ public class RotaTest {
 
     @Test
     public void inDateFullScheduleAssignsNobody() {
-        rota.setSchedule(createSchedule("2016-06-17", "2016-06-24", "2016-07-01", "2016-07-08"));
+        List<FridayLunch> createdSchedule = createSchedule("2016-06-17", "2016-06-24", "2016-07-01", "2016-07-08");
         List<Apprentice> apprentices = createApprentices("Mollie", "Nick", "Priya", "Rabea");
-        assignApprentices(rota.getSchedule(), apprentices);
+        assignApprentices(createdSchedule, apprentices);
 
-        rota.updateSchedule(apprentices);
+        rota.updateSchedule(createdSchedule, apprentices);
 
         assertEquals("Mollie", rota.getSchedule().get(0).getApprentice().get().getName());
         assertEquals("Nick", rota.getSchedule().get(1).getApprentice().get().getName());
@@ -137,11 +137,11 @@ public class RotaTest {
 
     @Test
     public void outOfDateScheduleAssignsOneNewApprentice() {
-        rota.setSchedule(createSchedule("2016-06-10", "2016-06-17", "2016-06-24", "2016-07-01"));
+        List<FridayLunch> createdSchedule = createSchedule("2016-06-10", "2016-06-17", "2016-06-24", "2016-07-01");
         List<Apprentice> apprentices = createApprentices("Mollie", "Nick", "Priya", "Rabea");
-        assignApprentices(rota.getSchedule(), apprentices);
+        assignApprentices(createdSchedule, apprentices);
 
-        rota.updateSchedule(apprentices);
+        rota.updateSchedule(createdSchedule, apprentices);
 
         assertEquals("Nick", rota.getSchedule().get(0).getApprentice().get().getName());
         assertEquals("Priya", rota.getSchedule().get(1).getApprentice().get().getName());
@@ -151,11 +151,11 @@ public class RotaTest {
 
     @Test
     public void outOfDateScheduleAssignsTwoNewApprentices() {
-        rota.setSchedule(createSchedule("2016-06-03", "2016-06-10", "2016-06-17", "2016-06-24"));
+        List<FridayLunch> createdSchedule = createSchedule("2016-06-03", "2016-06-10", "2016-06-17", "2016-06-24");
         List<Apprentice> apprentices = createApprentices("Mollie", "Nick", "Priya", "Rabea");
-        assignApprentices(rota.getSchedule(), apprentices);
+        assignApprentices(createdSchedule, apprentices);
 
-        rota.updateSchedule(apprentices);
+        rota.updateSchedule(createdSchedule, apprentices);
 
         assertEquals("Priya", rota.getSchedule().get(0).getApprentice().get().getName());
         assertEquals("Rabea", rota.getSchedule().get(1).getApprentice().get().getName());
