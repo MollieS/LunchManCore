@@ -1,5 +1,6 @@
 package LunchManCore;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -10,6 +11,9 @@ public class FridayLunch {
     private Restaurant restaurant;
 
     public FridayLunch(LocalDate date) {
+        if (!date.getDayOfWeek().equals(DayOfWeek.FRIDAY)) {
+            throw new NonFridayException();
+        }
         this.date = date;
     }
 

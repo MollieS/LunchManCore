@@ -37,5 +37,10 @@ public class FridayLunchTest {
         assertEquals(kinMenu, fridayLunch.getRestaurant().get().getMenuLink());
     }
 
+    @Test(expected = NonFridayException.class)
+    public void rejectsNonFridayDates() {
+        FridayLunch thursday = new FridayLunch(LocalDate.of(2016, 06, 9));
+    }
+
 
 }
