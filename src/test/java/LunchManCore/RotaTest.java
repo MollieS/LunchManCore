@@ -38,6 +38,7 @@ public class RotaTest {
     @Test
     public void findsTheNextFourFridaysWhenScheduleIsEmpty() {
         List<LocalDate> result = rota.findNextFridays(LocalDate.of(2016, 6, 11));
+
         assertEquals(LocalDate.of(2016, 6, 17), result.get(0));
         assertEquals(LocalDate.of(2016, 6, 24), result.get(1));
         assertEquals(LocalDate.of(2016, 7, 1), result.get(2));
@@ -47,6 +48,7 @@ public class RotaTest {
     @Test
     public void createsTheNextFourFridayLunchesWhenScheduleIsEmpty() {
         List<FridayLunch> result = rota.createFridays();
+
         assertEquals(LocalDate.of(2016, 6, 17), result.get(0).getDate());
         assertEquals(LocalDate.of(2016, 6, 24), result.get(1).getDate());
         assertEquals(LocalDate.of(2016, 7, 1), result.get(2).getDate());

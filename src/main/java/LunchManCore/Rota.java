@@ -29,10 +29,6 @@ public class Rota {
         }
     }
 
-    public void clear() {
-        schedule = new ArrayList<>();
-    }
-
     public void updateSchedule(List<Apprentice> apprentices) {
         for (FridayLunch friday : createFridays()) {
             Apprentice apprentice = apprentices.remove(0);

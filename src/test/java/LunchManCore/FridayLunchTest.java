@@ -37,4 +37,5 @@ public class FridayLunchTest {
         assertEquals(kinMenu, fridayLunch.getRestaurant().get().getMenuLink());
     }
 
+
 }
