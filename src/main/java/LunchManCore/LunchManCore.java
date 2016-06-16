@@ -46,4 +46,5 @@ public class LunchManCore {
         fridayLunch.assignRestaurant(restaurants.get(restaurant));
         storage.saveSchedule(rota.getSchedule());
     }
+
 }
