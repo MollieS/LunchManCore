@@ -15,5 +15,4 @@ public interface Storage {
     void saveEmployees(List<Employee> employees);
 
     void saveSchedule(List<FridayLunch> lunches);
-
 }
