@@ -17,7 +17,7 @@ public class RotaTest {
 
     @Before
     public void setUp() {
-        this.rota = new Rota(4, LocalDate.of(2016, 6, 11));
+        this.rota = new Rota(2, LocalDate.of(2016, 6, 11));
         apprentices = createApprentices("Mollie", "Nick", "Cedric", "Priya", "Rabea");
     }
 
@@ -29,8 +29,6 @@ public class RotaTest {
 
         assertEquals(LocalDate.of(2016, 6, 17), rota.getSchedule().get(0).getDate());
         assertEquals(LocalDate.of(2016, 6, 24), rota.getSchedule().get(1).getDate());
-        assertEquals(LocalDate.of(2016, 7, 1), rota.getSchedule().get(2).getDate());
-        assertEquals(LocalDate.of(2016, 7, 8), rota.getSchedule().get(3).getDate());
     }
 
     @Test
@@ -41,8 +39,6 @@ public class RotaTest {
 
         assertEquals(LocalDate.of(2016, 6, 17), rota.getSchedule().get(0).getDate());
         assertEquals(LocalDate.of(2016, 6, 24), rota.getSchedule().get(1).getDate());
-        assertEquals(LocalDate.of(2016, 7, 1), rota.getSchedule().get(2).getDate());
-        assertEquals(LocalDate.of(2016, 7, 8), rota.getSchedule().get(3).getDate());
     }
 
     @Test
@@ -53,20 +49,16 @@ public class RotaTest {
 
         assertEquals(LocalDate.of(2016, 6, 17), rota.getSchedule().get(0).getDate());
         assertEquals(LocalDate.of(2016, 6, 24), rota.getSchedule().get(1).getDate());
-        assertEquals(LocalDate.of(2016, 7, 1), rota.getSchedule().get(2).getDate());
-        assertEquals(LocalDate.of(2016, 7, 8), rota.getSchedule().get(3).getDate());
     }
 
     @Test
-    public void scheduleWithTwoOldDatesHasTwoDatesUpdates() {
+    public void scheduleWithTwoOldDatesHasTwoDatesUpdated() {
         List<FridayLunch> createdSchedule = createSchedule("2016-06-03", "2016-06-10", "2016-06-17", "2016-06-24");
 
         rota.updateSchedule(createdSchedule, apprentices);
 
         assertEquals(LocalDate.of(2016, 6, 17), rota.getSchedule().get(0).getDate());
         assertEquals(LocalDate.of(2016, 6, 24), rota.getSchedule().get(1).getDate());
-        assertEquals(LocalDate.of(2016, 7, 1), rota.getSchedule().get(2).getDate());
-        assertEquals(LocalDate.of(2016, 7, 8), rota.getSchedule().get(3).getDate());
     }
 
     @Test
@@ -77,8 +69,6 @@ public class RotaTest {
 
         assertEquals(LocalDate.of(2016, 6, 17), rota.getSchedule().get(0).getDate());
         assertEquals(LocalDate.of(2016, 6, 24), rota.getSchedule().get(1).getDate());
-        assertEquals(LocalDate.of(2016, 7, 1), rota.getSchedule().get(2).getDate());
-        assertEquals(LocalDate.of(2016, 7, 8), rota.getSchedule().get(3).getDate());
     }
 
 
@@ -91,8 +81,6 @@ public class RotaTest {
 
         assertEquals("Mollie", rota.getSchedule().get(0).getApprentice().get().getName());
         assertEquals("Mollie", rota.getSchedule().get(1).getApprentice().get().getName());
-        assertEquals("Mollie", rota.getSchedule().get(2).getApprentice().get().getName());
-        assertEquals("Mollie", rota.getSchedule().get(3).getApprentice().get().getName());
     }
 
     @Test
@@ -104,8 +92,6 @@ public class RotaTest {
 
         assertEquals("Mollie", rota.getSchedule().get(0).getApprentice().get().getName());
         assertEquals("Nick", rota.getSchedule().get(1).getApprentice().get().getName());
-        assertEquals("Mollie", rota.getSchedule().get(2).getApprentice().get().getName());
-        assertEquals("Nick", rota.getSchedule().get(3).getApprentice().get().getName());
     }
 
     @Test
@@ -117,8 +103,6 @@ public class RotaTest {
 
         assertEquals("Mollie", rota.getSchedule().get(0).getApprentice().get().getName());
         assertEquals("Nick", rota.getSchedule().get(1).getApprentice().get().getName());
-        assertEquals("Priya", rota.getSchedule().get(2).getApprentice().get().getName());
-        assertEquals("Rabea", rota.getSchedule().get(3).getApprentice().get().getName());
     }
 
     @Test
@@ -131,8 +115,6 @@ public class RotaTest {
 
         assertEquals("Mollie", rota.getSchedule().get(0).getApprentice().get().getName());
         assertEquals("Nick", rota.getSchedule().get(1).getApprentice().get().getName());
-        assertEquals("Priya", rota.getSchedule().get(2).getApprentice().get().getName());
-        assertEquals("Rabea", rota.getSchedule().get(3).getApprentice().get().getName());
     }
 
     @Test
@@ -145,8 +127,6 @@ public class RotaTest {
 
         assertEquals("Nick", rota.getSchedule().get(0).getApprentice().get().getName());
         assertEquals("Priya", rota.getSchedule().get(1).getApprentice().get().getName());
-        assertEquals("Rabea", rota.getSchedule().get(2).getApprentice().get().getName());
-        assertEquals("Mollie", rota.getSchedule().get(3).getApprentice().get().getName());
     }
 
     @Test
@@ -159,8 +139,6 @@ public class RotaTest {
 
         assertEquals("Priya", rota.getSchedule().get(0).getApprentice().get().getName());
         assertEquals("Rabea", rota.getSchedule().get(1).getApprentice().get().getName());
-        assertEquals("Mollie", rota.getSchedule().get(2).getApprentice().get().getName());
-        assertEquals("Nick", rota.getSchedule().get(3).getApprentice().get().getName());
     }
 
     private void assignApprentices(List<FridayLunch> schedule, List<Apprentice> apprentices) {
