@@ -25,6 +25,13 @@ public class LunchManCore {
         storage.saveSchedule(rota.getSchedule());
     }
 
+    public void assignApprenticeToLunch(Integer schedulePosition, String newName) {
+        Rota rota = getCurrentSchedule();
+        FridayLunch fridayLunch = rota.getSchedule().get(schedulePosition);
+        fridayLunch.assignApprentice(new Apprentice(newName));
+        storage.saveSchedule(rota.getSchedule());
+    }
+
     public Rota getCurrentSchedule() {
         Rota rota = new Rota(4, LocalDate.now());
         rota.updateSchedule(storage.getSchedule(), storage.getApprentices());
@@ -32,10 +39,12 @@ public class LunchManCore {
         return rota;
     }
 
-    public void assignApprenticeToLunch(Integer schedulePosition, String newName) {
-        Rota rota = getCurrentSchedule();
-        FridayLunch fridayLunch = rota.getSchedule().get(schedulePosition);
-        fridayLunch.assignApprentice(new Apprentice(newName));
-        storage.saveSchedule(rota.getSchedule());
+    public List<Restaurant> getRestaurants() {
+        return storage.getRestaurants();
     }
+
+    public List<Employee> getEmployees() {
+        return storage.getEmployees();
+    }
+
 }
