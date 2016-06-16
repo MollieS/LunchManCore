@@ -42,6 +42,16 @@ public class LunchManCoreTest {
     }
 
     @Test
+    public void canLoadAListOfGuests() {
+        List<Guest> guests = Arrays.asList(new Guest("Tom", "Eggs"));
+        storage.setGuests(guests);
+
+        List<Guest> loadedGuests = lunchMan.getGuests();
+
+        assertEquals("Tom", loadedGuests.get(0).getName());
+    }
+
+    @Test
     public void canLoadTheCurrentSchedule() {
         storage.setApprentices("Nick", "Mollie");
         storage.setSchedule(new ArrayList<>());
@@ -50,6 +60,14 @@ public class LunchManCoreTest {
 
         assertEquals("Nick", rota.getSchedule().get(0).getApprentice().get().getName());
         assertEquals("Mollie", rota.getSchedule().get(1).getApprentice().get().getName());
+    }
+
+    @Test
+    public void canAddAGuest() {
+        lunchMan.addAGuest("Tom", "Egg");
+        List<Guest> guests = lunchMan.getGuests();
+
+        assertEquals("Tom", guests.get(0).getName());
     }
 
     @Test

@@ -9,6 +9,7 @@ public class StorageFake implements Storage {
     private List<Employee> employees;
     private List<Apprentice> apprentices;
     private List<FridayLunch> schedule;
+    private List<Guest> guests;
 
     public StorageFake() {
         this.apprentices = new ArrayList<>();
@@ -30,8 +31,19 @@ public class StorageFake implements Storage {
         return restaurants;
     }
 
+    public List<Guest> getGuests() {
+        if (guests != null) {
+            return guests;
+        }
+        return new ArrayList<>();
+    }
+
     public void saveSchedule(List<FridayLunch> lunches) {
         this.schedule = lunches;
+    }
+
+    public void saveGuests(List<Guest> guests) {
+        this.guests = guests;
     }
 
     public void saveEmployees(List<Employee> employees) {
@@ -54,5 +66,9 @@ public class StorageFake implements Storage {
         for (String name : names) {
             apprentices.add(new Apprentice(name));
         }
+    }
+
+    public void setGuests(List<Guest> guests) {
+        this.guests = guests;
     }
 }

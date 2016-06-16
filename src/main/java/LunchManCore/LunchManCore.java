@@ -19,6 +19,10 @@ public class LunchManCore {
         return storage.getEmployees();
     }
 
+    public List<Guest> getGuests() {
+        return storage.getGuests();
+    }
+
     public Rota getCurrentSchedule() {
         Rota rota = new Rota(4, LocalDate.now());
         rota.updateSchedule(storage.getSchedule(), storage.getApprentices());
@@ -47,4 +51,10 @@ public class LunchManCore {
         storage.saveSchedule(rota.getSchedule());
     }
 
+    public void addAGuest(String name, String order) {
+        List<Guest> guests = storage.getGuests();
+        Guest guest = new Guest(name, order);
+        guests.add(guest);
+        storage.saveGuests(guests);
+    }
 }
