@@ -13,7 +13,7 @@ public class Rota {
     private LocalDate startDate;
     private List<FridayLunch> schedule = new ArrayList<>();
 
-    public Rota(int scheduleCapacity, Time startDate) {
+    public Rota(int scheduleCapacity, CustomDate startDate) {
         this.scheduleCapacity = scheduleCapacity;
         this.startDate = startDate.getDate();
     }

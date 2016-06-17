@@ -2,7 +2,7 @@ package LunchManCore;
 
 import java.time.LocalDate;
 
-public class FridayDate implements Time {
+public class CurrentDate implements CustomDate {
 
     public LocalDate getDate() {
         return LocalDate.now();

@@ -56,7 +56,8 @@ public class LunchManCoreTest {
         storage.setApprentices("Nick", "Mollie");
         storage.setSchedule(new ArrayList<>());
 
-        Rota rota = lunchMan.getCurrentSchedule();
+
+        Rota rota = lunchMan.getCurrentSchedule(new DateFake(2016, 6, 14));
 
         assertEquals("Nick", rota.getSchedule().get(0).getApprentice().get().getName());
         assertEquals("Mollie", rota.getSchedule().get(1).getApprentice().get().getName());
@@ -74,9 +75,10 @@ public class LunchManCoreTest {
     public void canAssignAnApprenticeToAFridayLunch() {
         storage.setApprentices("Nick", "Mollie");
         storage.setSchedule(new ArrayList<>());
+        lunchMan.getCurrentSchedule(new CurrentDate());
 
         lunchMan.assignApprenticeToLunch(1, "Rabea");
-        Rota rota = lunchMan.getCurrentSchedule();
+        Rota rota = lunchMan.getCurrentSchedule(new DateFake(2016, 6, 14));
 
         assertEquals("Rabea", rota.getSchedule().get(1).getApprentice().get().getName());
     }
@@ -98,9 +100,10 @@ public class LunchManCoreTest {
         storage.setRestaurants(restaurants);
         storage.setApprentices("Nick", "Mollie");
         storage.setSchedule(new ArrayList<>());
+        lunchMan.getCurrentSchedule(new CurrentDate());
 
         lunchMan.chooseNextFridayMenu(0);
-        Rota rota = lunchMan.getCurrentSchedule();
+        Rota rota = lunchMan.getCurrentSchedule(new DateFake(2016, 06, 14));
 
         assertEquals("Nandos", rota.getSchedule().get(0).getRestaurant().get().getName());
     }

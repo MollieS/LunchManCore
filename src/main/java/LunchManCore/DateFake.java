@@ -2,7 +2,7 @@ package LunchManCore;
 
 import java.time.LocalDate;
 
-public class DateFake implements Time {
+public class DateFake implements CustomDate {
 
     private LocalDate date;
 

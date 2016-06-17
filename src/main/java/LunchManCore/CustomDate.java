@@ -2,7 +2,7 @@ package LunchManCore;
 
 import java.time.LocalDate;
 
-public interface Time {
+public interface CustomDate {
 
     LocalDate getDate();
 }

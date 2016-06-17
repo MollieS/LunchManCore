@@ -1,11 +1,11 @@
 package LunchManCore;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class LunchManCore {
 
     private Storage storage;
+    private CustomDate date;
 
     public LunchManCore(Storage storage) {
         this.storage = storage;
@@ -23,15 +23,16 @@ public class LunchManCore {
         return storage.getGuests();
     }
 
-    public Rota getCurrentSchedule() {
-        Rota rota = new Rota(4, new FridayDate());
+    public Rota getCurrentSchedule(CustomDate date) {
+        this.date = date;
+        Rota rota = new Rota(4, date);
         rota.updateSchedule(storage.getSchedule(), storage.getApprentices());
         storage.saveSchedule(rota.getSchedule());
         return rota;
     }
 
     public void assignApprenticeToLunch(Integer schedulePosition, String newName) {
-        Rota rota = getCurrentSchedule();
+        Rota rota = getCurrentSchedule(date);
         FridayLunch fridayLunch = rota.getSchedule().get(schedulePosition);
         fridayLunch.assignApprentice(new Apprentice(newName));
         storage.saveSchedule(rota.getSchedule());
@@ -45,7 +46,7 @@ public class LunchManCore {
 
     public void chooseNextFridayMenu(Integer restaurant) {
         List<Restaurant> restaurants = storage.getRestaurants();
-        Rota rota = getCurrentSchedule();
+        Rota rota = getCurrentSchedule(date);
         FridayLunch fridayLunch = rota.getSchedule().get(0);
         fridayLunch.assignRestaurant(restaurants.get(restaurant));
         storage.saveSchedule(rota.getSchedule());
