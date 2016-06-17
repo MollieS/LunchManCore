@@ -24,7 +24,7 @@ public class LunchManCore {
     }
 
     public Rota getCurrentSchedule() {
-        Rota rota = new Rota(4, LocalDate.now());
+        Rota rota = new Rota(4, new FridayDate());
         rota.updateSchedule(storage.getSchedule(), storage.getApprentices());
         storage.saveSchedule(rota.getSchedule());
         return rota;

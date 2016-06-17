@@ -17,7 +17,7 @@ public class RotaTest {
 
     @Before
     public void setUp() {
-        this.rota = new Rota(2, LocalDate.of(2016, 6, 11));
+        this.rota = new Rota(2, new DateFake(2016, 6, 11));
         apprentices = createApprentices("Mollie", "Nick", "Cedric", "Priya", "Rabea");
     }
 
