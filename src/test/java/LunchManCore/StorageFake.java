@@ -31,9 +31,11 @@ public class StorageFake implements Storage {
     }
 
     public void saveSchedule(List<FridayLunch> lunches) {
+        this.schedule = lunches;
     }
 
     public void saveEmployees(List<Employee> employees) {
+        this.employees = employees;
     }
 
     public void setRestaurants(List<Restaurant> restaurants) {

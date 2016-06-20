@@ -47,6 +47,4 @@ public class LunchManCore {
         storage.saveSchedule(rota.getSchedule());
     }
 
-
-
 }
