@@ -4,8 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -14,101 +13,153 @@ import static org.junit.Assert.assertEquals;
 public class RotaTest {
 
     private Rota rota;
+    private List<Apprentice> apprentices;
 
     @Before
     public void setUp() {
-        this.rota = new Rota(4, LocalDate.of(2016, 6, 11));
+        this.rota = new Rota(2, LocalDate.of(2016, 6, 11));
+        apprentices = createApprentices("Mollie", "Nick", "Cedric", "Priya", "Rabea");
     }
 
     @Test
-    public void canAssignOneApprenticeToAFridayLunch() {
-        FridayLunch nextFriday = new FridayLunch(LocalDate.of(2016, 6, 10));
-        Apprentice ced = new Apprentice("Cedric");
-        rota.assign(nextFriday, ced);
-        assertEquals(ced, rota.getSchedule().get(0).getApprentice().get());
+    public void emptyScheduleAddsFourCorrectDates() {
+        rota.emptySchedule();
+
+        rota.updateSchedule(new ArrayList<>(), apprentices);
+
+        assertEquals(LocalDate.of(2016, 6, 17), rota.getSchedule().get(0).getDate());
+        assertEquals(LocalDate.of(2016, 6, 24), rota.getSchedule().get(1).getDate());
+    }
+
+    @Test
+    public void fullInDateScheduleDoesNotChangeDate() {
+        List<FridayLunch> createdSchedule = createSchedule("2016-06-17", "2016-06-24", "2016-07-01", "2016-07-08");
+
+        rota.updateSchedule(createdSchedule, apprentices);
+
+        assertEquals(LocalDate.of(2016, 6, 17), rota.getSchedule().get(0).getDate());
+        assertEquals(LocalDate.of(2016, 6, 24), rota.getSchedule().get(1).getDate());
+    }
+
+    @Test
+    public void outOfDateScheduleHasDateUpdated() {
+        List<FridayLunch> createdSchedule = createSchedule("2016-06-10", "2016-06-17", "2016-06-24", "2016-07-01");
+
+        rota.updateSchedule(createdSchedule, apprentices);
+
+        assertEquals(LocalDate.of(2016, 6, 17), rota.getSchedule().get(0).getDate());
+        assertEquals(LocalDate.of(2016, 6, 24), rota.getSchedule().get(1).getDate());
+    }
+
+    @Test
+    public void scheduleWithTwoOldDatesHasTwoDatesUpdated() {
+        List<FridayLunch> createdSchedule = createSchedule("2016-06-03", "2016-06-10", "2016-06-17", "2016-06-24");
+
+        rota.updateSchedule(createdSchedule, apprentices);
+
+        assertEquals(LocalDate.of(2016, 6, 17), rota.getSchedule().get(0).getDate());
+        assertEquals(LocalDate.of(2016, 6, 24), rota.getSchedule().get(1).getDate());
+    }
+
+    @Test
+    public void scheduleWithFourOldDatesHasFourDatesUpdates() {
+        List<FridayLunch> createdSchedule = createSchedule("2016-05-20", "2016-05-27", "2016-06-03", "2016-06-10");
+
+        rota.updateSchedule(createdSchedule, apprentices);
+
+        assertEquals(LocalDate.of(2016, 6, 17), rota.getSchedule().get(0).getDate());
+        assertEquals(LocalDate.of(2016, 6, 24), rota.getSchedule().get(1).getDate());
     }
 
 
     @Test
-    public void findsDateOfNextFridayWhenScheduleIsEmpty() {
-        assertEquals(LocalDate.of(2016, 6, 17), rota.findNextFriday(LocalDate.of(2016, 6, 11)));
+    public void canAssignOneApprenticeToFourFridaysEmptySchedule() {
+        List<Apprentice> apprentices = createApprentices("Mollie");
+        rota.emptySchedule();
+
+        rota.updateSchedule(new ArrayList<>(), apprentices);
+
+        assertEquals("Mollie", rota.getSchedule().get(0).getApprentice().get().getName());
+        assertEquals("Mollie", rota.getSchedule().get(1).getApprentice().get().getName());
     }
 
     @Test
-    public void findsTheNextFourFridaysWhenScheduleIsEmpty() {
-        List<LocalDate> result = rota.findNextFridays(LocalDate.of(2016, 6, 11));
-        assertEquals(LocalDate.of(2016, 6, 17), result.get(0));
-        assertEquals(LocalDate.of(2016, 6, 24), result.get(1));
-        assertEquals(LocalDate.of(2016, 7, 1), result.get(2));
-        assertEquals(LocalDate.of(2016, 7, 8), result.get(3));
+    public void canAssignTwoApprenticesToFourFridaysEmptySchedule() {
+        List<Apprentice> apprentices = createApprentices("Mollie", "Nick");
+        rota.emptySchedule();
+
+        rota.updateSchedule(new ArrayList<>(), apprentices);
+
+        assertEquals("Mollie", rota.getSchedule().get(0).getApprentice().get().getName());
+        assertEquals("Nick", rota.getSchedule().get(1).getApprentice().get().getName());
     }
 
     @Test
-    public void createsTheNextFourFridayLunchesWhenScheduleIsEmpty() {
-        List<FridayLunch> result = rota.createFridays();
-        assertEquals(LocalDate.of(2016, 6, 17), result.get(0).getDate());
-        assertEquals(LocalDate.of(2016, 6, 24), result.get(1).getDate());
-        assertEquals(LocalDate.of(2016, 7, 1), result.get(2).getDate());
-        assertEquals(LocalDate.of(2016, 7, 8), result.get(3).getDate());
+    public void canAssignFourApprenticesToFourFridaysEmptySchedule() {
+        List<Apprentice> apprentices = createApprentices("Mollie", "Nick", "Priya", "Rabea");
+        rota.emptySchedule();
+
+        rota.updateSchedule(new ArrayList<>(), apprentices);
+
+        assertEquals("Mollie", rota.getSchedule().get(0).getApprentice().get().getName());
+        assertEquals("Nick", rota.getSchedule().get(1).getApprentice().get().getName());
     }
 
     @Test
-    public void createsTheNext3FridayLunchesWhenScheduleHasOneFriday() {
-        FridayLunch nextFriday = new FridayLunch(LocalDate.of(2016, 6, 17));
-        Apprentice ced = new Apprentice("Cedric");
-        rota.assign(nextFriday, ced);
-        List<FridayLunch> result = rota.createFridays();
-        assertEquals(LocalDate.of(2016, 6, 24), result.get(0).getDate());
-        assertEquals(LocalDate.of(2016, 7, 1), result.get(1).getDate());
-        assertEquals(LocalDate.of(2016, 7, 8), result.get(2).getDate());
-        assertEquals(3, result.size());
+    public void inDateFullScheduleAssignsNobody() {
+        List<FridayLunch> createdSchedule = createSchedule("2016-06-17", "2016-06-24", "2016-07-01", "2016-07-08");
+        List<Apprentice> apprentices = createApprentices("Mollie", "Nick", "Priya", "Rabea");
+        assignApprentices(createdSchedule, apprentices);
+
+        rota.updateSchedule(createdSchedule, apprentices);
+
+        assertEquals("Mollie", rota.getSchedule().get(0).getApprentice().get().getName());
+        assertEquals("Nick", rota.getSchedule().get(1).getApprentice().get().getName());
     }
 
     @Test
-    public void canAssignOneApprenticeToFourFridayLunches() {
-        Apprentice priya = new Apprentice("Priya");
-        List<Apprentice> apprentices = new LinkedList<>(Arrays.asList(priya));
-        rota.updateSchedule(apprentices);
-        List<FridayLunch> result = rota.getSchedule();
-        assertEquals(priya, result.get(0).getApprentice().get());
-        assertEquals(priya, result.get(1).getApprentice().get());
-        assertEquals(priya, result.get(2).getApprentice().get());
-        assertEquals(priya, result.get(3).getApprentice().get());
+    public void outOfDateScheduleAssignsOneNewApprentice() {
+        List<FridayLunch> createdSchedule = createSchedule("2016-06-10", "2016-06-17", "2016-06-24", "2016-07-01");
+        List<Apprentice> apprentices = createApprentices("Mollie", "Nick", "Priya", "Rabea");
+        assignApprentices(createdSchedule, apprentices);
+
+        rota.updateSchedule(createdSchedule, apprentices);
+
+        assertEquals("Nick", rota.getSchedule().get(0).getApprentice().get().getName());
+        assertEquals("Priya", rota.getSchedule().get(1).getApprentice().get().getName());
     }
 
     @Test
-    public void canAssignFourApprenticesToFourFridayLunches() {
-        Apprentice priya = new Apprentice("Priya");
-        Apprentice ced = new Apprentice("Ced");
-        Apprentice nick = new Apprentice("Nick");
-        Apprentice mollie = new Apprentice("Mollie");
-        List<Apprentice> apprentices = new LinkedList<>(Arrays.asList(priya, ced, nick, mollie));
-        rota.updateSchedule(apprentices);
-        List<FridayLunch> result = rota.getSchedule();
-        assertEquals(priya, result.get(0).getApprentice().get());
-        assertEquals(ced, result.get(1).getApprentice().get());
-        assertEquals(nick, result.get(2).getApprentice().get());
-        assertEquals(mollie, result.get(3).getApprentice().get());
+    public void outOfDateScheduleAssignsTwoNewApprentices() {
+        List<FridayLunch> createdSchedule = createSchedule("2016-06-03", "2016-06-10", "2016-06-17", "2016-06-24");
+        List<Apprentice> apprentices = createApprentices("Mollie", "Nick", "Priya", "Rabea");
+        assignApprentices(createdSchedule, apprentices);
+
+        rota.updateSchedule(createdSchedule, apprentices);
+
+        assertEquals("Priya", rota.getSchedule().get(0).getApprentice().get().getName());
+        assertEquals("Rabea", rota.getSchedule().get(1).getApprentice().get().getName());
     }
 
-    @Test
-    public void canAssignTwoApprenticesToThreeFridayLunches() {
-        Apprentice nick = new Apprentice("Nick");
-        Apprentice mollie = new Apprentice("Mollie");
-        List<Apprentice> apprentices = new LinkedList<>(Arrays.asList(nick, mollie));
-        FridayLunch nextFriday = new FridayLunch(LocalDate.of(2016, 6, 17));
-        Apprentice ced = new Apprentice("Cedric");
-        rota.assign(nextFriday, ced);
-        rota.updateSchedule(apprentices);
-        List<FridayLunch> result = rota.getSchedule();
-        assertEquals(ced, result.get(0).getApprentice().get());
-        assertEquals(LocalDate.of(2016, 6, 17), result.get(0).getDate());
-        assertEquals(nick, result.get(1).getApprentice().get());
-        assertEquals(LocalDate.of(2016, 6, 24), result.get(1).getDate());
-        assertEquals(mollie, result.get(2).getApprentice().get());
-        assertEquals(LocalDate.of(2016, 7, 1), result.get(2).getDate());
-        assertEquals(nick, result.get(3).getApprentice().get());
-        assertEquals(LocalDate.of(2016, 7, 8), result.get(3).getDate());
+    private void assignApprentices(List<FridayLunch> schedule, List<Apprentice> apprentices) {
+        for (int i = 0; i < schedule.size(); i++) {
+            schedule.get(i).assignApprentice(apprentices.get(i));
+        }
     }
 
+    private List<Apprentice> createApprentices(String... names) {
+        List<Apprentice> apprentices = new ArrayList<>();
+        for (String name : names) {
+            apprentices.add(new Apprentice(name));
+        }
+        return apprentices;
+    }
+
+    private List<FridayLunch> createSchedule(String... dates) {
+        List<FridayLunch> schedule = new ArrayList<>();
+        for (String date : dates) {
+            schedule.add(new FridayLunch(LocalDate.parse(date)));
+        }
+        return schedule;
+    }
 }

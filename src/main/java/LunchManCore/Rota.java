@@ -22,24 +22,31 @@ public class Rota {
         return schedule;
     }
 
-    public void assign(FridayLunch nextFriday, Apprentice apprentice) {
-        nextFriday.assignApprentice(apprentice);
-        schedule.add(nextFriday);
-    }
-
-    public void updateSchedule(List<Apprentice> apprentices) {
+    public void updateSchedule(List<FridayLunch> loadedSchedule, List<Apprentice> apprentices) {
+        setSchedule(loadedSchedule);
         for (FridayLunch friday : createFridays()) {
             Apprentice apprentice = apprentices.remove(0);
-            assign(friday, apprentice);
+            addToSchedule(friday, apprentice);
             apprentices.add(apprentice);
         }
     }
 
-    public LocalDate findNextFriday(LocalDate date) {
+    private void addToSchedule(FridayLunch nextFriday, Apprentice apprentice) {
+        nextFriday.assignApprentice(apprentice);
+        if (schedule.size() < scheduleCapacity) {
+            schedule.add(nextFriday);
+        }
+    }
+
+    private void setSchedule(List<FridayLunch> schedule) {
+        this.schedule = schedule;
+    }
+
+    private LocalDate findNextFriday(LocalDate date) {
         return date.with(TemporalAdjusters.next(DayOfWeek.FRIDAY));
     }
 
-    public List<LocalDate> findNextFridays(LocalDate date) {
+    private List<LocalDate> findNextFridays(LocalDate date) {
         List<LocalDate> dates = new ArrayList<>();
         for (int i = getSchedule().size(); i < scheduleCapacity; i++) {
             dates.add(findNextFriday(date));
@@ -48,8 +55,9 @@ public class Rota {
         return dates;
     }
 
-    public List<FridayLunch> createFridays() {
+    private List<FridayLunch> createFridays() {
         List<FridayLunch> lunches = new ArrayList<>();
+        removePastFridays();
 
         if (!(schedule.isEmpty())) {
             startDate = schedule.get(schedule.size() - 1).getDate();
@@ -58,5 +66,21 @@ public class Rota {
             lunches.add(new FridayLunch(date));
         }
         return lunches;
+    }
+
+    private void removePastFridays() {
+        if (!(schedule.isEmpty())) {
+            Iterator<FridayLunch> iterator = schedule.iterator();
+            while (iterator.hasNext()) {
+                FridayLunch friday = iterator.next();
+                if (friday.getDate().isBefore(startDate)) {
+                    iterator.remove();
+                }
+            }
+        }
+    }
+
+    protected void emptySchedule() {
+        schedule = new ArrayList<>();
     }
 }
