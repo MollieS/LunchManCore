@@ -3,11 +3,12 @@ package LunchManCore;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class LunchManCoreTest {
 
@@ -17,7 +18,7 @@ public class LunchManCoreTest {
     @Before
     public void setUp() {
         this.storage = new StorageFake();
-        this.lunchMan = new LunchManCore(storage);
+        this.lunchMan = LunchManCore.create(storage, new DateFake(2016, 6, 14));
     }
 
     @Test
@@ -33,9 +34,6 @@ public class LunchManCoreTest {
 
     @Test
     public void canLoadAListOfEmployees() {
-        List<Employee> employees = Arrays.asList(new Employee("Nick"), new Employee("Mollie"));
-        storage.setEmployees(employees);
-
         List<Employee> loadedEmployees = lunchMan.getEmployees();
 
         assertEquals("Nick", loadedEmployees.get(0).getName());
@@ -53,11 +51,7 @@ public class LunchManCoreTest {
 
     @Test
     public void canLoadTheCurrentSchedule() {
-        storage.setApprentices("Nick", "Mollie");
-        storage.setSchedule(new ArrayList<>());
-
-
-        Rota rota = lunchMan.getCurrentSchedule(new DateFake(2016, 6, 14));
+        Rota rota = lunchMan.loadUpdateSaveSchedule();
 
         assertEquals("Nick", rota.getSchedule().get(0).getApprentice().get().getName());
         assertEquals("Mollie", rota.getSchedule().get(1).getApprentice().get().getName());
@@ -73,21 +67,14 @@ public class LunchManCoreTest {
 
     @Test
     public void canAssignAnApprenticeToAFridayLunch() {
-        storage.setApprentices("Nick", "Mollie");
-        storage.setSchedule(new ArrayList<>());
-        lunchMan.getCurrentSchedule(new CurrentDate());
-
         lunchMan.assignApprenticeToLunch(1, "Rabea");
-        Rota rota = lunchMan.getCurrentSchedule(new DateFake(2016, 6, 14));
+        Rota rota = lunchMan.loadUpdateSaveSchedule();
 
         assertEquals("Rabea", rota.getSchedule().get(1).getApprentice().get().getName());
     }
 
     @Test
     public void canPlaceAnOrder() {
-        List<Employee> employees = Arrays.asList(new Employee("Nick"), new Employee("Mollie"));
-        storage.setEmployees(employees);
-
         lunchMan.placeOrder(1, "Pizza");
         List<Employee> loadedEmployees = lunchMan.getEmployees();
 
@@ -98,13 +85,35 @@ public class LunchManCoreTest {
     public void canChooseAMenuForTheNextFriday() {
         List<Restaurant> restaurants = Arrays.asList(new Restaurant("Nandos", "www.nandos.com"), new Restaurant("KFC", "www.KFC.com"));
         storage.setRestaurants(restaurants);
-        storage.setApprentices("Nick", "Mollie");
-        storage.setSchedule(new ArrayList<>());
-        lunchMan.getCurrentSchedule(new CurrentDate());
 
         lunchMan.chooseNextFridayMenu(0);
-        Rota rota = lunchMan.getCurrentSchedule(new DateFake(2016, 06, 14));
+        Rota rota = lunchMan.loadUpdateSaveSchedule();
 
         assertEquals("Nandos", rota.getSchedule().get(0).getRestaurant().get().getName());
+    }
+
+    @Test
+    public void resetsEmployeeOrdersWhenFridayHasPassed() {
+        StorageFake storage = new StorageFake();
+        LunchManCore lunchMan = LunchManCore.create(storage, new DateFake(2016, 6, 20));
+
+        lunchMan.placeOrder(0, "Pizza");
+        LunchManCore newLunchMan = LunchManCore.create(storage, new DateFake(2016, 6, 26));
+
+        List<Employee> employees1 = newLunchMan.getEmployees();
+        assertEquals(Optional.empty(), employees1.get(0).getOrder());
+    }
+
+    @Test
+    public void resetsGuestsWhenFridayHasPassed() {
+        List<Guest> guests = Arrays.asList(new Guest("Nick", "Pizza"), new Guest("Mollie", "Egg"));
+        StorageFake storage = new StorageFake();
+        storage.setGuests(guests);
+        LunchManCore.create(storage, new DateFake(2016, 6, 20));
+
+        LunchManCore newLunchMan = LunchManCore.create(storage, new DateFake(2016, 6, 26));
+
+        List<Guest> newGuests = newLunchMan.getGuests();
+        assertTrue(newGuests.isEmpty());
     }
 }

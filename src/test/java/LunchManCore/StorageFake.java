@@ -1,7 +1,9 @@
 package LunchManCore;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.StringJoiner;
 
 public class StorageFake implements Storage {
 
@@ -12,7 +14,11 @@ public class StorageFake implements Storage {
     private List<Guest> guests;
 
     public StorageFake() {
-        this.apprentices = new ArrayList<>();
+        this.apprentices = createApprentices();
+        this.restaurants = new ArrayList<>();
+        this.employees = createEmployees();
+        this.schedule = new ArrayList<>();
+        this.guests = new ArrayList<>();
     }
 
     public List<FridayLunch> getSchedule() {
@@ -70,5 +76,23 @@ public class StorageFake implements Storage {
 
     public void setGuests(List<Guest> guests) {
         this.guests = guests;
+    }
+
+    private List<Employee> createEmployees() {
+        List<Employee> employees = new ArrayList<>();
+        List<String> names = Arrays.asList("Nick", "Mollie");
+        for (String name : names) {
+            employees.add(new Employee(name));
+        }
+        return employees;
+    }
+
+    private List<Apprentice> createApprentices() {
+        List<Apprentice> apprentices = new ArrayList<>();
+        List<String> names = Arrays.asList("Nick", "Mollie");
+        for (String name : names) {
+            apprentices.add(new Apprentice(name));
+        }
+        return apprentices;
     }
 }

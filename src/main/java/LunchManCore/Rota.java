@@ -9,13 +9,15 @@ import java.util.*;
 
 public class Rota {
 
-    private final int scheduleCapacity;
+    private final int minimumScheduleSize;
     private LocalDate startDate;
     private List<FridayLunch> schedule = new ArrayList<>();
+    private boolean deleted;
 
-    public Rota(int scheduleCapacity, CustomDate startDate) {
-        this.scheduleCapacity = scheduleCapacity;
+    public Rota(int minimumScheduleSize, CustomDate startDate) {
+        this.minimumScheduleSize = minimumScheduleSize;
         this.startDate = startDate.getDate();
+        this.deleted = false;
     }
 
     public List<FridayLunch> getSchedule() {
@@ -33,7 +35,7 @@ public class Rota {
 
     private void addToSchedule(FridayLunch nextFriday, Apprentice apprentice) {
         nextFriday.assignApprentice(apprentice);
-        if (schedule.size() < scheduleCapacity) {
+        if (schedule.size() < minimumScheduleSize) {
             schedule.add(nextFriday);
         }
     }
@@ -48,7 +50,7 @@ public class Rota {
 
     private List<LocalDate> findNextFridays(LocalDate date) {
         List<LocalDate> dates = new ArrayList<>();
-        for (int i = getSchedule().size(); i < scheduleCapacity; i++) {
+        for (int i = getSchedule().size(); i < minimumScheduleSize; i++) {
             dates.add(findNextFriday(date));
             date = date.plus(1, ChronoUnit.WEEKS);
         }
@@ -75,6 +77,7 @@ public class Rota {
                 FridayLunch friday = iterator.next();
                 if (friday.getDate().isBefore(startDate)) {
                     iterator.remove();
+                    deleted = true;
                 }
             }
         }
@@ -82,5 +85,9 @@ public class Rota {
 
     protected void emptySchedule() {
         schedule = new ArrayList<>();
+    }
+
+    public boolean fridayHasBeenDeleted() {
+        return deleted;
     }
 }
