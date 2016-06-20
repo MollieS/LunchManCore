@@ -1,14 +1,49 @@
 package LunchManCore;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LunchManCore {
 
     private Storage storage;
+    private CustomDate date;
 
-    public LunchManCore(Storage storage) {
+    public LunchManCore(Storage storage, CustomDate date) {
         this.storage = storage;
+        this.date = date;
+    }
+
+    public static LunchManCore create(Storage storage, CustomDate date) {
+        LunchManCore lunchManCore = new LunchManCore(storage, date);
+        lunchManCore.updateAll();
+        return lunchManCore;
+    }
+
+    private void updateAll() {
+        Rota rota = loadUpdateSaveSchedule();
+        if (rota.fridayHasBeenDeleted()) {
+            loadUpdateSaveEmployees();
+            clearGuests();
+        }
+    }
+
+    public Rota loadUpdateSaveSchedule() {
+        Rota rota = new Rota(4, date);
+        rota.updateSchedule(storage.getSchedule(), storage.getApprentices());
+        storage.saveSchedule(rota.getSchedule());
+        return rota;
+    }
+
+    private void loadUpdateSaveEmployees() {
+        List<Employee> employees = storage.getEmployees();
+        for (Employee employee : employees) {
+            employee.addOrder(null);
+        }
+        storage.saveEmployees(employees);
+    }
+
+    private void clearGuests() {
+        storage.saveGuests(new ArrayList<>());
     }
 
     public List<Restaurant> getRestaurants() {
@@ -17,20 +52,29 @@ public class LunchManCore {
 
     public List<Employee> getEmployees() {
         return storage.getEmployees();
+}
+
+    public List<Guest> getGuests() {
+        return storage.getGuests();
     }
 
-    public Rota getCurrentSchedule() {
-        Rota rota = new Rota(4, LocalDate.now());
-        rota.updateSchedule(storage.getSchedule(), storage.getApprentices());
-        storage.saveSchedule(rota.getSchedule());
-        return rota;
+    public List<FridayLunch> getSchedule() {
+        return storage.getSchedule();
     }
 
     public void assignApprenticeToLunch(Integer schedulePosition, String newName) {
-        Rota rota = getCurrentSchedule();
-        FridayLunch fridayLunch = rota.getSchedule().get(schedulePosition);
+        List<FridayLunch> schedule = getSchedule();
+        FridayLunch fridayLunch = schedule.get(schedulePosition);
         fridayLunch.assignApprentice(new Apprentice(newName));
-        storage.saveSchedule(rota.getSchedule());
+        storage.saveSchedule(schedule);
+    }
+
+    public void chooseNextFridayMenu(Integer restaurant) {
+        List<Restaurant> restaurants = storage.getRestaurants();
+        List<FridayLunch> schedule = getSchedule();
+        FridayLunch fridayLunch = schedule.get(0);
+        fridayLunch.assignRestaurant(restaurants.get(restaurant));
+        storage.saveSchedule(schedule);
     }
 
     public void placeOrder(Integer employee, String order) {
@@ -39,12 +83,10 @@ public class LunchManCore {
         storage.saveEmployees(employees);
     }
 
-    public void chooseNextFridayMenu(Integer restaurant) {
-        List<Restaurant> restaurants = storage.getRestaurants();
-        Rota rota = getCurrentSchedule();
-        FridayLunch fridayLunch = rota.getSchedule().get(0);
-        fridayLunch.assignRestaurant(restaurants.get(restaurant));
-        storage.saveSchedule(rota.getSchedule());
+    public void addAGuest(String name, String order) {
+        List<Guest> guests = storage.getGuests();
+        Guest guest = new Guest(name, order);
+        guests.add(guest);
+        storage.saveGuests(guests);
     }
-
 }

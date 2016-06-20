@@ -12,7 +12,11 @@ public interface Storage {
 
     List<Restaurant> getRestaurants();
 
+    List<Guest> getGuests();
+
     void saveEmployees(List<Employee> employees);
 
     void saveSchedule(List<FridayLunch> lunches);
+
+    void saveGuests(List<Guest> guests);
 }
