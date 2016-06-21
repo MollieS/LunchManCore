@@ -24,7 +24,7 @@ public class LunchManCoreTest {
     @Test
     public void canLoadAListOfRestaurants() {
         List<Restaurant> restaurants = Arrays.asList(new Restaurant("Nandos", "www.nandos.com"), new Restaurant("KFC", "www.KFC.com"));
-        storage.setRestaurants(restaurants);
+        storage.saveRestaurants(restaurants);
 
         List<Restaurant> loadedRestaurants = lunchMan.getRestaurants();
 
@@ -84,7 +84,7 @@ public class LunchManCoreTest {
     @Test
     public void canChooseAMenuForTheNextFriday() {
         List<Restaurant> restaurants = Arrays.asList(new Restaurant("Nandos", "www.nandos.com"), new Restaurant("KFC", "www.KFC.com"));
-        storage.setRestaurants(restaurants);
+        storage.saveRestaurants(restaurants);
 
         lunchMan.chooseNextFridayMenu(0);
         Rota rota = lunchMan.loadUpdateSaveSchedule();
