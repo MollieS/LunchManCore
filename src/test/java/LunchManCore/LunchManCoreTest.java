@@ -116,4 +116,15 @@ public class LunchManCoreTest {
         List<Guest> newGuests = newLunchMan.getGuests();
         assertTrue(newGuests.isEmpty());
     }
+
+    @Test
+    public void savesRotatedApprenticesAfterAssignment() {
+        Storage storage = new StorageFake();
+        LunchManCore.create(storage, new DateFake(2016, 6, 20));
+        LunchManCore lunchMan = LunchManCore.create(storage, new DateFake(2016, 6, 26));
+
+        List<Apprentice> apprentices = storage.getApprentices();
+
+        assertEquals("Mollie", apprentices.get(0).getName());
+    }
 }

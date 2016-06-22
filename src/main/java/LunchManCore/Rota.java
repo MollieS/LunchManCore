@@ -12,12 +12,12 @@ public class Rota {
     private final int minimumScheduleSize;
     private LocalDate startDate;
     private List<FridayLunch> schedule = new ArrayList<>();
-    private boolean deleted;
+    private int updated;
 
     public Rota(int minimumScheduleSize, CustomDate startDate) {
         this.minimumScheduleSize = minimumScheduleSize;
         this.startDate = startDate.getDate();
-        this.deleted = false;
+        this.updated = 0;
     }
 
     public List<FridayLunch> getSchedule() {
@@ -30,6 +30,7 @@ public class Rota {
             Apprentice apprentice = apprentices.remove(0);
             addToSchedule(friday, apprentice);
             apprentices.add(apprentice);
+            updated++;
         }
     }
 
@@ -60,7 +61,6 @@ public class Rota {
     private List<FridayLunch> createFridays() {
         List<FridayLunch> lunches = new ArrayList<>();
         removePastFridays();
-
         if (!(schedule.isEmpty())) {
             startDate = schedule.get(schedule.size() - 1).getDate();
         }
@@ -77,7 +77,6 @@ public class Rota {
                 FridayLunch friday = iterator.next();
                 if (friday.getDate().isBefore(startDate)) {
                     iterator.remove();
-                    deleted = true;
                 }
             }
         }
@@ -87,7 +86,7 @@ public class Rota {
         schedule = new ArrayList<>();
     }
 
-    public boolean fridayHasBeenDeleted() {
-        return deleted;
+    public int numFridaysUpdated() {
+        return updated;
     }
 }

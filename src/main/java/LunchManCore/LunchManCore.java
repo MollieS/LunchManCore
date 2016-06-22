@@ -21,10 +21,20 @@ public class LunchManCore {
 
     private void updateAll() {
         Rota rota = loadUpdateSaveSchedule();
-        if (rota.fridayHasBeenDeleted()) {
+        if (rota.numFridaysUpdated() > 0) {
             loadUpdateSaveEmployees();
+            loadUpdateSaveApprentices(rota.numFridaysUpdated());
             clearGuests();
         }
+    }
+
+    private void loadUpdateSaveApprentices(int numOfMoves) {
+        List<Apprentice> apprentices = storage.getApprentices();
+        for (int i = 0; i < numOfMoves; i++) {
+            Apprentice movedApprentice = apprentices.remove(0);
+            apprentices.add(movedApprentice);
+        }
+        storage.saveApprentices(apprentices);
     }
 
     public Rota loadUpdateSaveSchedule() {
@@ -52,7 +62,7 @@ public class LunchManCore {
 
     public List<Employee> getEmployees() {
         return storage.getEmployees();
-}
+    }
 
     public List<Guest> getGuests() {
         return storage.getGuests();

@@ -25,7 +25,8 @@ public class StorageFake implements Storage {
     }
 
     public List<Apprentice> getApprentices() {
-        return apprentices;
+        List<Apprentice> currentApprentices = new ArrayList<>(apprentices);
+        return currentApprentices;
     }
 
     public List<Employee> getEmployees() {
@@ -59,18 +60,8 @@ public class StorageFake implements Storage {
         this.restaurants = restaurants;
     }
 
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
-    }
-
-    public void setSchedule(List<FridayLunch> schedule) {
-        this.schedule = schedule;
-    }
-
     public void saveApprentices(List<Apprentice> apprentices) {
-        for (Apprentice apprentice : apprentices) {
-            apprentices.add(apprentice);
-        }
+        this.apprentices = apprentices;
     }
 
     public void setGuests(List<Guest> guests) {
