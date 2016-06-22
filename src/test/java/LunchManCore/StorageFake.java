@@ -21,12 +21,11 @@ public class StorageFake implements Storage {
     }
 
     public List<FridayLunch> getSchedule() {
-        return schedule;
+        return new ArrayList<>(schedule);
     }
 
     public List<Apprentice> getApprentices() {
-        List<Apprentice> currentApprentices = new ArrayList<>(apprentices);
-        return currentApprentices;
+        return new ArrayList<>(apprentices);
     }
 
     public List<Employee> getEmployees() {
@@ -45,7 +44,7 @@ public class StorageFake implements Storage {
     }
 
     public void saveSchedule(List<FridayLunch> lunches) {
-        this.schedule = lunches;
+        this.schedule = new ArrayList<>(lunches);
     }
 
     public void saveGuests(List<Guest> guests) {

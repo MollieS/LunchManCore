@@ -1,6 +1,8 @@
 package LunchManCore;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class LunchManCore {
@@ -72,10 +74,52 @@ public class LunchManCore {
         return storage.getSchedule();
     }
 
-    public void assignApprenticeToLunch(Integer schedulePosition, String newName) {
+    public void assignApprenticeToLunch(Integer position, String newName) {
         List<FridayLunch> schedule = getSchedule();
-        FridayLunch fridayLunch = schedule.get(schedulePosition);
-        fridayLunch.assignApprentice(new Apprentice(newName));
+        List<Apprentice> unassignedApprentices = storage.getApprentices();
+        List<Apprentice> assignedApprentices = getListOfScheduledApprentices(schedule, new ArrayList<>());
+
+        insertNewApprentice(position, assignedApprentices, new Apprentice(newName));
+
+        addLastApprenticeToFrontOfQueue(unassignedApprentices, assignedApprentices.remove(assignedApprentices.size() -1));
+
+        reassignApprenticesToSchedule(schedule, assignedApprentices);
+
+        saveUpdatedScheduleAndApprentices(schedule, unassignedApprentices);
+    }
+
+    private void insertNewApprentice(Integer position, List<Apprentice> apprenticeList, Apprentice apprentice) {
+        apprenticeList.add(position, apprentice);
+    }
+
+    private void addLastApprenticeToFrontOfQueue(List<Apprentice> unassignedApprentices, Apprentice nextApprentice) {
+        int existingNextApprenticePosition = -1;
+        for (int i = 0; i < unassignedApprentices.size(); i++) {
+            if (nextApprentice.getName().equals(unassignedApprentices.get(i).getName())) {
+                existingNextApprenticePosition = i;
+            }
+        }
+        if (existingNextApprenticePosition != -1) {
+            unassignedApprentices.remove(existingNextApprenticePosition);
+        }
+        insertNewApprentice(0, unassignedApprentices, nextApprentice);
+    }
+
+    private List<Apprentice> getListOfScheduledApprentices(List<FridayLunch> schedule, List<Apprentice> assignedApprentices) {
+        for (FridayLunch lunch : schedule) {
+            assignedApprentices.add(lunch.getApprentice().get());
+        }
+        return assignedApprentices;
+    }
+
+    private void reassignApprenticesToSchedule(List<FridayLunch> schedule, List<Apprentice> assignedApprentices) {
+        for (int i = 0; i < schedule.size(); i++) {
+            schedule.get(i).assignApprentice(assignedApprentices.get(i));
+        }
+    }
+
+    private void saveUpdatedScheduleAndApprentices(List<FridayLunch> schedule, List<Apprentice> unassignedApprentices) {
+        storage.saveApprentices(unassignedApprentices);
         storage.saveSchedule(schedule);
     }
 

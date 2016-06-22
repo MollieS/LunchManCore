@@ -74,6 +74,17 @@ public class LunchManCoreTest {
     }
 
     @Test
+    public void assigningApprenticeInToScheduleDisplacesOtherApprentices() {
+        lunchMan.assignApprenticeToLunch(1, "Rabea");
+        List<FridayLunch> schedule = lunchMan.getSchedule();
+
+        assertEquals("Nick", schedule.get(0).getApprentice().get().getName());
+        assertEquals("Rabea", schedule.get(1).getApprentice().get().getName());
+        assertEquals("Mollie", schedule.get(2).getApprentice().get().getName());
+        assertEquals("Nick", schedule.get(3).getApprentice().get().getName());
+    }
+
+    @Test
     public void canPlaceAnOrder() {
         lunchMan.placeOrder(1, "Pizza");
         List<Employee> loadedEmployees = lunchMan.getEmployees();
