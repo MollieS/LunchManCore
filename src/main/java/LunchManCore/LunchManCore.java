@@ -101,8 +101,8 @@ public class LunchManCore {
         }
         if (existingNextApprenticePosition != -1) {
             unassignedApprentices.remove(existingNextApprenticePosition);
+            insertNewApprentice(0, unassignedApprentices, nextApprentice);
         }
-        insertNewApprentice(0, unassignedApprentices, nextApprentice);
     }
 
     private List<Apprentice> getListOfScheduledApprentices(List<FridayLunch> schedule, List<Apprentice> assignedApprentices) {
