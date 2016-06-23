@@ -81,7 +81,7 @@ public class LunchManCore {
 
         insertNewApprentice(position, assignedApprentices, new Apprentice(newName));
 
-        addLastApprenticeToFrontOfQueue(unassignedApprentices, assignedApprentices.remove(assignedApprentices.size() -1));
+        addLastApprenticeToFrontOfQueue(unassignedApprentices, assignedApprentices.remove(assignedApprentices.size() - 1));
 
         reassignApprenticesToSchedule(schedule, assignedApprentices);
 
@@ -131,10 +131,30 @@ public class LunchManCore {
         storage.saveSchedule(schedule);
     }
 
-    public void placeOrder(Integer employee, String order) {
+    public void placeOrder(Integer employeeIndex, String order) {
         List<Employee> employees = storage.getEmployees();
-        employees.get(employee).addOrder(order);
+        Employee employeeWithOrder = employees.get(employeeIndex);
+        employeeWithOrder.addOrder(getOrder(order, employees));
+        updateEmployeeOrders(employeeWithOrder, employees);
         storage.saveEmployees(employees);
+    }
+
+    private void updateEmployeeOrders(Employee employeeWithOrder, List<Employee> employees) {
+        for (Employee worker : employees) {
+            if (employeeWithOrder.getName().equals(worker.getOrder().orElse("NO NAME"))) {
+                worker.addOrder(employeeWithOrder.getOrder().get());
+            }
+        }
+    }
+
+    private String getOrder(String order, List<Employee> employees) {
+        String retrievedOrder = order;
+        for (Employee worker : employees) {
+            if (worker.getName().equals(order)) {
+                retrievedOrder = worker.getOrder().orElse(order);
+            }
+        }
+        return retrievedOrder;
     }
 
     public void deleteOrder(Integer employee) {

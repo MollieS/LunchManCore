@@ -93,6 +93,31 @@ public class LunchManCoreTest {
     }
 
     @Test
+    public void canCopyAnOrder() {
+        lunchMan.placeOrder(0, "Pizza");
+        lunchMan.placeOrder(1, "Nick");
+
+        List<Employee> loadedEmployees = lunchMan.getEmployees();
+
+        assertEquals("Pizza", loadedEmployees.get(1).getOrder().get());
+    }
+
+    @Test
+    public void canCopyAnOrderInAdvance() {
+        lunchMan.placeOrder(1, "Nick");
+
+        List<Employee> loadedEmployees = lunchMan.getEmployees();
+
+        assertEquals("Nick", loadedEmployees.get(1).getOrder().get());
+
+        lunchMan.placeOrder(0, "Pizza");
+
+        List<Employee> loadedEmployees2 = lunchMan.getEmployees();
+
+        assertEquals("Pizza", loadedEmployees2.get(1).getOrder().get());
+    }
+
+    @Test
     public void canDeleteAnOrder() {
         lunchMan.placeOrder(1, "Pizza");
         lunchMan.deleteOrder(1);
