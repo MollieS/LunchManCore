@@ -24,7 +24,7 @@ public class LunchManCoreTest {
     @Test
     public void canLoadAListOfRestaurants() {
         List<Restaurant> restaurants = Arrays.asList(new Restaurant("Nandos", "www.nandos.com"), new Restaurant("KFC", "www.KFC.com"));
-        storage.setRestaurants(restaurants);
+        storage.saveRestaurants(restaurants);
 
         List<Restaurant> loadedRestaurants = lunchMan.getRestaurants();
 
@@ -74,6 +74,17 @@ public class LunchManCoreTest {
     }
 
     @Test
+    public void assigningApprenticeInToScheduleDisplacesOtherApprentices() {
+        lunchMan.assignApprenticeToLunch(1, "Rabea");
+        List<FridayLunch> schedule = lunchMan.getSchedule();
+
+        assertEquals("Nick", schedule.get(0).getApprentice().get().getName());
+        assertEquals("Rabea", schedule.get(1).getApprentice().get().getName());
+        assertEquals("Mollie", schedule.get(2).getApprentice().get().getName());
+        assertEquals("Nick", schedule.get(3).getApprentice().get().getName());
+    }
+
+    @Test
     public void canPlaceAnOrder() {
         lunchMan.placeOrder(1, "Pizza");
         List<Employee> loadedEmployees = lunchMan.getEmployees();
@@ -82,9 +93,43 @@ public class LunchManCoreTest {
     }
 
     @Test
+    public void canCopyAnOrder() {
+        lunchMan.placeOrder(0, "Pizza");
+        lunchMan.placeOrder(1, "Nick");
+
+        List<Employee> loadedEmployees = lunchMan.getEmployees();
+
+        assertEquals("Pizza", loadedEmployees.get(1).getOrder().get());
+    }
+
+    @Test
+    public void canCopyAnOrderInAdvance() {
+        lunchMan.placeOrder(1, "Nick");
+
+        List<Employee> loadedEmployees = lunchMan.getEmployees();
+
+        assertEquals("Nick", loadedEmployees.get(1).getOrder().get());
+
+        lunchMan.placeOrder(0, "Pizza");
+
+        List<Employee> loadedEmployees2 = lunchMan.getEmployees();
+
+        assertEquals("Pizza", loadedEmployees2.get(1).getOrder().get());
+    }
+
+    @Test
+    public void canDeleteAnOrder() {
+        lunchMan.placeOrder(1, "Pizza");
+        lunchMan.deleteOrder(1);
+        List<Employee> loadedEmployees = lunchMan.getEmployees();
+
+        assertEquals(Optional.empty(), loadedEmployees.get(1).getOrder());
+    }
+
+    @Test
     public void canChooseAMenuForTheNextFriday() {
         List<Restaurant> restaurants = Arrays.asList(new Restaurant("Nandos", "www.nandos.com"), new Restaurant("KFC", "www.KFC.com"));
-        storage.setRestaurants(restaurants);
+        storage.saveRestaurants(restaurants);
 
         lunchMan.chooseNextFridayMenu(0);
         Rota rota = lunchMan.loadUpdateSaveSchedule();
@@ -115,5 +160,16 @@ public class LunchManCoreTest {
 
         List<Guest> newGuests = newLunchMan.getGuests();
         assertTrue(newGuests.isEmpty());
+    }
+
+    @Test
+    public void savesRotatedApprenticesAfterAssignment() {
+        Storage storage = new StorageFake();
+        LunchManCore.create(storage, new DateFake(2016, 6, 20));
+        LunchManCore lunchMan = LunchManCore.create(storage, new DateFake(2016, 6, 26));
+
+        List<Apprentice> apprentices = storage.getApprentices();
+
+        assertEquals("Mollie", apprentices.get(0).getName());
     }
 }

@@ -26,4 +26,7 @@ public class Employee {
         return Optional.empty();
     }
 
+    public void deleteOrder() {
+        this.order = null;
+    }
 }
