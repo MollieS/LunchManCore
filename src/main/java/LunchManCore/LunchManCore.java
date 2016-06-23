@@ -137,10 +137,17 @@ public class LunchManCore {
         storage.saveEmployees(employees);
     }
 
+    public void deleteOrder(Integer employee) {
+        List<Employee> employees = storage.getEmployees();
+        employees.get(employee).deleteOrder();
+        storage.saveEmployees(employees);
+    }
+
     public void addAGuest(String name, String order) {
         List<Guest> guests = storage.getGuests();
         Guest guest = new Guest(name, order);
         guests.add(guest);
         storage.saveGuests(guests);
     }
+
 }

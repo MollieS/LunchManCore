@@ -93,6 +93,15 @@ public class LunchManCoreTest {
     }
 
     @Test
+    public void canDeleteAnOrder() {
+        lunchMan.placeOrder(1, "Pizza");
+        lunchMan.deleteOrder(1);
+        List<Employee> loadedEmployees = lunchMan.getEmployees();
+
+        assertEquals(Optional.empty(), loadedEmployees.get(1).getOrder());
+    }
+
+    @Test
     public void canChooseAMenuForTheNextFriday() {
         List<Restaurant> restaurants = Arrays.asList(new Restaurant("Nandos", "www.nandos.com"), new Restaurant("KFC", "www.KFC.com"));
         storage.saveRestaurants(restaurants);

@@ -3,6 +3,8 @@ package LunchManCore;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static org.junit.Assert.assertEquals;
 
 public class EmployeeTest {
@@ -23,6 +25,13 @@ public class EmployeeTest {
     public void hasAnOrder() {
         employee.addOrder("Peri Peri Chicken");
         assertEquals("Peri Peri Chicken", employee.getOrder().get());
+    }
+
+    @Test
+    public void canDeleteAnOrder() {
+        employee.addOrder("Peri Peri Chicken");
+        employee.deleteOrder();
+        assertEquals(Optional.empty(), employee.getOrder());
     }
 
 }
