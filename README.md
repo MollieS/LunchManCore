@@ -5,7 +5,7 @@
 ```shell
 $ cd <folder where you want to store the project>
 
-$ git clone https://github.com/MollieS/java_ttt_core.git
+$ git clone https://github.com/MollieS/LunchManCore.git
 
 $ git clone git@github.com:MollieS/LunchManCore.git
 
