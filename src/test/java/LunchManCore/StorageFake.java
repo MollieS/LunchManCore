@@ -3,7 +3,6 @@ package LunchManCore;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.StringJoiner;
 
 public class StorageFake implements Storage {
 
@@ -22,11 +21,11 @@ public class StorageFake implements Storage {
     }
 
     public List<FridayLunch> getSchedule() {
-        return schedule;
+        return new ArrayList<>(schedule);
     }
 
     public List<Apprentice> getApprentices() {
-        return apprentices;
+        return new ArrayList<>(apprentices);
     }
 
     public List<Employee> getEmployees() {
@@ -45,7 +44,7 @@ public class StorageFake implements Storage {
     }
 
     public void saveSchedule(List<FridayLunch> lunches) {
-        this.schedule = lunches;
+        this.schedule = new ArrayList<>(lunches);
     }
 
     public void saveGuests(List<Guest> guests) {
@@ -56,22 +55,12 @@ public class StorageFake implements Storage {
         this.employees = employees;
     }
 
-    public void setRestaurants(List<Restaurant> restaurants) {
+    public void saveRestaurants(List<Restaurant> restaurants) {
         this.restaurants = restaurants;
     }
 
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
-    }
-
-    public void setSchedule(List<FridayLunch> schedule) {
-        this.schedule = schedule;
-    }
-
-    public void setApprentices(String...names) {
-        for (String name : names) {
-            apprentices.add(new Apprentice(name));
-        }
+    public void saveApprentices(List<Apprentice> apprentices) {
+        this.apprentices = apprentices;
     }
 
     public void setGuests(List<Guest> guests) {

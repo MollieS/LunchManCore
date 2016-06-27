@@ -19,4 +19,8 @@ public interface Storage {
     void saveSchedule(List<FridayLunch> lunches);
 
     void saveGuests(List<Guest> guests);
+
+    void saveRestaurants(List<Restaurant> restaurants);
+
+    void saveApprentices(List<Apprentice> apprentices);
 }

@@ -200,13 +200,13 @@ public class RotaTest {
 
     @Test
     public void knowsWhenFridaysHaveBeenRemoved() {
-        List<FridayLunch> createdSchedule = createSchedule("2016-06-03", "2016-06-10", "2016-06-17", "2016-06-24");
+        List<FridayLunch> createdSchedule = createSchedule("2016-06-03", "2016-06-10");
 
         DateFake date = new DateFake(2016, 6, 8);
         Rota rota = new Rota(2, date);
 
-        rota.updateSchedule(createdSchedule, new ArrayList<>());
-        assertTrue(rota.fridayHasBeenDeleted());
+        rota.updateSchedule(createdSchedule, createApprentices("Mollie", "Nick"));
+        assertEquals(1, rota.numFridaysUpdated());
     }
 
     @Test
@@ -217,10 +217,10 @@ public class RotaTest {
         Rota rota = new Rota(2, date);
 
         rota.updateSchedule(createdSchedule, new ArrayList<>());
-        assertFalse(rota.fridayHasBeenDeleted());
+        assertEquals(0, rota.numFridaysUpdated());
 
     }
-    
+
     private void assignApprentices(List<FridayLunch> schedule, List<Apprentice> apprentices) {
         for (int i = 0; i < schedule.size(); i++) {
             schedule.get(i).assignApprentice(apprentices.get(i));
