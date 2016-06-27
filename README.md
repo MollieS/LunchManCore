@@ -1,5 +1,7 @@
 # LunchManCore
 
+[![Build Status](https://travis-ci.org/MollieS/LunchManCore.svg?branch=master)](https://travis-ci.org/MollieS/LunchManCore) [![Coverage Status](https://coveralls.io/repos/github/MollieS/LunchManCore/badge.svg?branch=master)](https://coveralls.io/github/MollieS/LunchManCore?branch=master)
+
 ### Clone
 
 ```shell
